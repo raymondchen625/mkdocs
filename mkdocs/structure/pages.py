@@ -232,7 +232,6 @@ class Page:
         Check these in order and use the first that returns a valid title:
         - value provided on init (passed in from config)
         - value of metadata 'title'
-        - content of the first H1 in Markdown content
         - convert filename to title
         """
         if self.title is not None:
@@ -242,17 +241,13 @@ class Page:
             self.title = self.meta['title']
             return
 
-        assert self.markdown is not None
-        title = get_markdown_title(self.markdown)
-
-        if title is None:
-            if self.is_homepage:
-                title = 'Home'
-            else:
-                title = self.file.name.replace('-', ' ').replace('_', ' ')
-                # Capitalize if the filename was all lowercase, otherwise leave it as-is.
-                if title.lower() == title:
-                    title = title.capitalize()
+        if self.is_homepage:
+            title = 'Home'
+        else:
+            title = self.file.name.replace('-', ' ').replace('_', ' ')
+            # Capitalize if the filename was all lowercase, otherwise leave it as-is.
+            if title.lower() == title:
+                title = title.capitalize()
 
         self.title = title
 
